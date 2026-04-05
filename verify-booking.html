@@ -1,111 +1,111 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <div style="max-width:500px;margin:0 auto;padding:30px;">
-      <div style="text-align:center;margin-bottom:30px;">
-        <h2>🔍 Verify Booking</h2>
-        <p>Enter details to view your camper van reservation</p>
-      </div>
+<div style="max-width:500px;margin:0 auto;padding:30px;">
+  <div style="text-align:center;margin-bottom:30px;">
+    <h2>🔍 Verify Booking</h2>
+    <p>Enter details to view your camper van reservation</p>
+  </div>
 
-      <div id="form-section">
-        <div style="margin-bottom:20px;">
-          <label style="display:block;margin-bottom:5px;font-weight:bold;">Booking Number</label>
-          <input id="booking-input" type="text" placeholder="e.g. 4018" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:16px;">
-        </div>
-        <div style="margin-bottom:25px;">
-          <label style="display:block;margin-bottom:5px;font-weight:bold;">Last Name</label>
-          <input id="lastname-input" type="text" placeholder="e.g. Smith" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:16px;">
-        </div>
-        <button id="verify-btn" style="width:100%;padding:15px;background:#10b981;color:white;border:none;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;">
-          Verify Booking
-        </button>
-      </div>
-
-      <div id="loading" style="display:none;padding:20px;text-align:center;">🔍 Loading...</div>
-      <div id="booking-details" style="display:none;"></div>
-      <div id="error" style="display:none;color:#ef4444;text-align:center;padding:20px;"></div>
+  <!-- GHL form fields (only inputs) -->
+  <div id="form-section">
+    <div style="margin-bottom:20px;">
+      <label style="display:block;margin-bottom:5px;font-weight:bold;">Booking Number</label>
+      <input id="booking-input" type="text" placeholder="e.g. 4018" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:16px;">
     </div>
+    <div style="margin-bottom:25px;">
+      <label style="display:block;margin-bottom:5px;font-weight:bold;">Last Name</label>
+      <input id="lastname-input" type="text" placeholder="e.g. Smith" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:16px;">
+    </div>
+  </div>
 
-    <script>
-      // GHL will send the result via postMessage
-      window.addEventListener('message', (event) => {
-        const { data } = event;
+  <!-- BUTTON OUTSIDE GHL'S FORM AREA -->
+  <div>
+    <button id="verify-btn" style="width:100%;padding:15px;background:#10b981;color:white;border:none;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;">
+      Verify Booking
+    </button>
+  </div>
 
-        if (data.type === 'booking-lookup-result') {
-          const result = data.result;
+  <div id="loading" style="display:none;padding:20px;text-align:center;">🔍 Loading...</div>
+  <div id="booking-details" style="display:none;"></div>
+  <div id="error" style="display:none;color:#ef4444;text-align:center;padding:20px;"></div>
+</div>
 
-          document.getElementById('loading').style.display = 'none';
+<script>
+  document.getElementById('verify-btn').onclick = async function(e) {
+    e.preventDefault();
 
-          if (result.success && result.data) {
-            const d = result.data;
+    const bookingNum = document.getElementById('booking-input').value.trim();
+    const lastName = document.getElementById('lastname-input').value.trim();
 
-            document.getElementById('form-section').style.display = 'none';
-            document.getElementById('booking-details').style.display = 'block';
-            document.getElementById('booking-details').innerHTML = `
-              <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:30px;border-radius:20px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.2);">
-                <h2 style="margin:0 0 20px 0;">✅ Booking Verified!</h2>
-                <div style="background:rgba(255,255,255,0.15);padding:25px;border-radius:15px;">
-                  <h3 style="margin:0 0 15px 0;">#${d.bookingNum || 'N/A'} - ${d.lastName || 'N/A'}</h3>
-                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;font-size:14px;">
-                    <div><strong>Reference:</strong> ${d.reservationRef || 'N/A'}</div>
-                    <div><strong>Status:</strong> ${d.reservationStatus || 'Active'}</div>
-                    <div><strong>Balance Due:</strong> ${d.totalBalanceDue || 'N/A'}</div>
-                    <div><strong>Total:</strong> ${d.totalAmount || 'N/A'}</div>
-                    <div><strong>Pickup:</strong> ${d.pickupDate || 'N/A'}</div>
-                    <div><strong>Location:</strong> ${d.pickupLocation || 'N/A'}</div>
-                  </div>
-                </div>
-                <label style="display:block;margin-top:20px;color:white;">
-                  <input type="checkbox" id="confirmDetails">
-                  I confirm these details are correct
-                </label>
-                <button onclick="window.parent.postMessage({type:'booking-verified',verified:true,ref:'${d.reservationRef || 'N/A'}'},'*');window.location.href='#next-slide';" 
-                        style="margin-top:15px;padding:12px 30px;background:rgba(255,255,255,0.3);color:white;border:2px solid white;border-radius:10px;font-size:16px;cursor:pointer;">
-                  Continue Survey →
-                </button>
-              </div>
-            `;
-          } else {
-            document.getElementById('form-section').style.display = 'none';
-            document.getElementById('error').style.display = 'block';
-            document.getElementById('error').innerHTML = `
-              <div style="font-size:18px;">
-                ❌ ${result.message || 'Booking not found'}
-                <br><small>Contact <a href="mailto:support@wakacampa.com" style="color:#ef4444;text-decoration:underline;">support@wakacampa.com</a> if correct</small>
-              </div>
-              <button onclick="window.parent.postMessage({type:'booking-verified',verified:false},'*');document.getElementById('form-section').style.display='block';document.getElementById('error').style.display='none';" style="margin-top:15px;padding:10px 20px;background:#6b7280;color:white;border:none;border-radius:6px;">
-                Try Again
-              </button>
-            `;
-            window.parent.postMessage({type: 'booking-verified', verified: false}, '*');
-          }
-        }
+    if (!bookingNum || !lastName) {
+      document.getElementById('error').innerHTML = 'Please enter both fields';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('form-section').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('form-section').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+
+    try {
+      const response = await fetch('https://cloud.activepieces.com/api/v1/webhooks/PWGPbbTKKaJUE470aVwLy', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ bookingNum, lastName })
       });
 
-      // When the user clicks Verify, just tell GHL to do the lookup
-      document.getElementById('verify-btn').onclick = function(e) {
-        e.preventDefault();
+      const result = await response.json();
 
-        const bookingNum = document.getElementById('booking-input').value.trim();
-        const lastName = document.getElementById('lastname-input').value.trim();
+      console.log('Webhook result:', result);
 
-        if (!bookingNum || !lastName) {
-          document.getElementById('error').innerHTML = 'Please enter both fields';
-          document.getElementById('error').style.display = 'block';
-          document.getElementById('form-section').style.display = 'block';
-          return;
-        }
+      if (result && typeof result === 'object' && result.success === true && result.data != null) {
+        const data = result.data;
 
-        document.getElementById('form-section').style.display = 'none';
-        document.getElementById('loading').style.display = 'block';
-
-        // Tell GHL to lookup this booking
-        window.parent.postMessage({
-          type: 'booking-lookup-request',
-          bookingNum,
-          lastName
-        }, '*');
-      };
-    </script>
-  </body>
-</html>
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('booking-details').style.display = 'block';
+        document.getElementById('booking-details').innerHTML = `
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:30px;border-radius:20px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+            <h2 style="margin:0 0 20px 0;">✅ Booking Verified!</h2>
+            <div style="background:rgba(255,255,255,0.15);padding:25px;border-radius:15px;">
+              <h3 style="margin:0 0 15px 0;">#${data.bookingNum || bookingNum} - ${data.lastName || lastName}</h3>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;font-size:14px;">
+                <div><strong>Reference:</strong> ${data.reservationRef || 'N/A'}</div>
+                <div><strong>Status:</strong> ${data.reservationStatus || 'Active'}</div>
+                <div><strong>Balance Due:</strong> ${data.totalBalanceDue || 'N/A'}</div>
+                <div><strong>Total:</strong> ${data.totalAmount || 'N/A'}</div>
+                <div><strong>Pickup:</strong> ${data.pickupDate || 'N/A'}</div>
+                <div><strong>Location:</strong> ${data.pickupLocation || 'N/A'}</div>
+              </div>
+            </div>
+            <button onclick="window.location.href='#next-slide'" style="margin-top:25px;padding:12px 30px;background:rgba(255,255,255,0.3);color:white;border:2px solid white;border-radius:10px;font-size:16px;cursor:pointer;">
+              Continue Survey →
+            </button>
+          </div>
+        `;
+      } else {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error').innerHTML = `
+          <div style="font-size:18px;">
+            ❌ ${result?.message || 'Booking not found'}
+            <br><small>Contact <a href="mailto:support@wakacampa.com" style="color:#ef4444;text-decoration:underline;">support@wakacampa.com</a> if correct</small>
+          </div>
+          <button onclick="document.getElementById('form-section').style.display='block';document.getElementById('error').style.display='none';" style="margin-top:15px;padding:10px 20px;background:#6b7280;color:white;border:none;border-radius:6px;">
+            Try Again
+          </button>
+        `;
+      }
+    } catch (error) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').innerHTML = `
+        <div style="font-size:18px;">
+          ❌ Connection error - try again
+          <br><small>Or contact support</small>
+        </div>
+        <button onclick="document.getElementById('form-section').style.display='block';document.getElementById('error').style.display='none';" style="margin-top:15px;padding:10px 20px;background:#6b7280;color:white;border:none;border-radius:6px;">
+          Try Again
+        </button>
+      `;
+      console.error('Fetch error:', error);
+    }
+  };
+</script>
