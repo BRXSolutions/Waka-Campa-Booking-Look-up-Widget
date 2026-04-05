@@ -4,7 +4,6 @@
     <p>Enter details to view your camper van reservation</p>
   </div>
 
-  <!-- GHL form fields (only inputs) -->
   <div id="form-section">
     <div style="margin-bottom:20px;">
       <label style="display:block;margin-bottom:5px;font-weight:bold;">Booking Number</label>
@@ -14,11 +13,7 @@
       <label style="display:block;margin-bottom:5px;font-weight:bold;">Last Name</label>
       <input id="lastname-input" type="text" placeholder="e.g. Smith" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:16px;">
     </div>
-  </div>
-
-  <!-- BUTTON OUTSIDE GHL'S FORM AREA -->
-  <div>
-    <button id="verify-btn" style="width:100%;padding:15px;background:#10b981;color:white;border:none;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;">
+    <button id="verify-btn" type="button" style="width:100%;padding:15px;background:#10b981;color:white;border:none;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;">
       Verify Booking
     </button>
   </div>
@@ -29,83 +24,97 @@
 </div>
 
 <script>
-  document.getElementById('verify-btn').onclick = async function(e) {
+document.getElementById('verify-btn').onclick = async function(e) {
+  e.preventDefault();  // ← Prevent any GHL form auto‑submit
+
+  const bookingNum = document.getElementById('booking-input').value.trim();
+  const lastName = document.getElementById('lastname-input').value.trim();
+
+  if (!bookingNum || !lastName) {
+    document.getElementById('error').innerHTML = 'Please enter both fields';
+    document.getElementById('error').style.display = 'block';
+    document.getElementById('form-section').style.display = 'block';
     e.preventDefault();
+    return;
+  }
 
-    const bookingNum = document.getElementById('booking-input').value.trim();
-    const lastName = document.getElementById('lastname-input').value.trim();
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
 
-    if (!bookingNum || !lastName) {
-      document.getElementById('error').innerHTML = 'Please enter both fields';
-      document.getElementById('error').style.display = 'block';
-      document.getElementById('form-section').style.display = 'block';
-      return;
-    }
+  try {
+    // ACTIVEPIECES WEBHOOK - REAL GHL DATA
+    const response = await fetch('https://cloud.activepieces.com/api/v1/webhooks/PWGPbbTKKaJUE470aVwLy', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({bookingNum, lastName})
+    });
 
-    document.getElementById('form-section').style.display = 'none';
-    document.getElementById('loading').style.display = 'block';
+    const result = await response.json();
 
-    try {
-      const response = await fetch('https://cloud.activepieces.com/api/v1/webhooks/PWGPbbTKKaJUE470aVwLy', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ bookingNum, lastName })
-      });
+    if (result.success && result.data) {
+      const data = result.data;
 
-      const result = await response.json();
-
-      console.log('Webhook result:', result);
-
-      if (result && typeof result === 'object' && result.success === true && result.data != null) {
-        const data = result.data;
-
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('booking-details').style.display = 'block';
-        document.getElementById('booking-details').innerHTML = `
-          <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:30px;border-radius:20px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.2);">
-            <h2 style="margin:0 0 20px 0;">✅ Booking Verified!</h2>
-            <div style="background:rgba(255,255,255,0.15);padding:25px;border-radius:15px;">
-              <h3 style="margin:0 0 15px 0;">#${data.bookingNum || bookingNum} - ${data.lastName || lastName}</h3>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;font-size:14px;">
-                <div><strong>Reference:</strong> ${data.reservationRef || 'N/A'}</div>
-                <div><strong>Status:</strong> ${data.reservationStatus || 'Active'}</div>
-                <div><strong>Balance Due:</strong> ${data.totalBalanceDue || 'N/A'}</div>
-                <div><strong>Total:</strong> ${data.totalAmount || 'N/A'}</div>
-                <div><strong>Pickup:</strong> ${data.pickupDate || 'N/A'}</div>
-                <div><strong>Location:</strong> ${data.pickupLocation || 'N/A'}</div>
-              </div>
-            </div>
-            <button onclick="window.location.href='#next-slide'" style="margin-top:25px;padding:12px 30px;background:rgba(255,255,255,0.3);color:white;border:2px solid white;border-radius:10px;font-size:16px;cursor:pointer;">
-              Continue Survey →
-            </button>
-          </div>
-        `;
-      } else {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('error').innerHTML = `
-          <div style="font-size:18px;">
-            ❌ ${result?.message || 'Booking not found'}
-            <br><small>Contact <a href="mailto:support@wakacampa.com" style="color:#ef4444;text-decoration:underline;">support@wakacampa.com</a> if correct</small>
-          </div>
-          <button onclick="document.getElementById('form-section').style.display='block';document.getElementById('error').style.display='none';" style="margin-top:15px;padding:10px 20px;background:#6b7280;color:white;border:none;border-radius:6px;">
-            Try Again
-          </button>
-        `;
-      }
-    } catch (error) {
       document.getElementById('loading').style.display = 'none';
-      document.getElementById('error').style.display = 'block';
+      document.getElementById('booking-details').style.display = 'block';
+      document.getElementById('booking-details').innerHTML = `
+        <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:30px;border-radius:20px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+          <h2 style="margin:0 0 20px 0;">✅ Booking Verified!</h2>
+          <div style="background:rgba(255,255,255,0.15);padding:25px;border-radius:15px;">
+            <h3 style="margin:0 0 15px 0;">#${data.bookingNum || bookingNum} - ${data.lastName || lastName}</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;font-size:14px;">
+              <div><strong>Reference:</strong> ${data.ref || 'N/A'}</div>
+              <div><strong>Status:</strong> ${data.status || 'Active'}</div>
+              <div><strong>Balance Due:</strong> ${data.balanceDue || 'N/A'}</div>
+              <div><strong>Total:</strong> ${data.totalAmount || 'N/A'}</div>
+              <div><strong>Pickup:</strong> ${data.pickupDate || 'N/A'}</div>
+              <div><strong>Location:</strong> ${data.pickupLocation || 'N/A'}</div>
+            </div>
+          </div>
+          <p style="margin:15px 0 10px 0;color:rgba(255,255,255,0.9);font-size:16px;">
+            You can now proceed using the standard GHL Next button.
+          </p>
+        </div>
+      `;
+    } else {
+      document.getElementById('loading').style.display = 'none';
       document.getElementById('error').innerHTML = `
         <div style="font-size:18px;">
-          ❌ Connection error - try again
-          <br><small>Or contact support</small>
+          ❌ ${result.message || 'Booking not found'}
+          <br><small>Contact <a href="mailto:support@wakacampa.com" style="color:#fff;text-decoration:underline;">support@wakacampa.com</a> if you think this is correct</small>
         </div>
-        <button onclick="document.getElementById('form-section').style.display='block';document.getElementById('error').style.display='none';" style="margin-top:15px;padding:10px 20px;background:#6b7280;color:white;border:none;border-radius:6px;">
+        <button onclick="
+          document.getElementById('form-section').style.display='block';
+          document.getElementById('error').style.display='none';
+          document.getElementById('booking-details').style.display='none';
+          document.getElementById('loading').style.display='none';
+        "
+        style="margin-top:15px;padding:10px 20px;background:#6b7280;color:white;border:none;border-radius:6px;">
           Try Again
         </button>
       `;
-      console.error('Fetch error:', error);
+      document.getElementById('error').style.display = 'block';
     }
-  };
+    e.preventDefault();  // ← Extra safety: tell GHL never to submit from this click
+  } catch(error) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error').innerHTML = `
+      <div style="font-size:18px;">
+        ❌ Connection error - try again
+        <br><small>Or contact support</small>
+      </div>
+      <button onclick="
+        document.getElementById('form-section').style.display='block';
+        document.getElementById('error').style.display='none';
+        document.getElementById('booking-details').style.display='none';
+        document.getElementById('loading').style.display='none';
+      "
+      style="margin-top:15px;padding:10px 20px;background:#6b7280;color:white;border:none;border-radius:6px;">
+        Try Again
+      </button>
+    `;
+    document.getElementById('error').style.display = 'block';
+    console.error('Webhook error:', error);
+    e.preventDefault();
+  }
+};
 </script>
