@@ -20,6 +20,7 @@
   <div id="survey-iframe" style="display:none;width:100%;border:none;"></div>
   <div id="error" style="display:none;color:#ef4444;text-align:center;padding:20px;font-family:'DM Sans',Arial,sans-serif;"></div> 
 </div> 
+
 <script> 
 let currentBookingNum = '';
 let currentLastName = '';
@@ -145,14 +146,12 @@ function handleDetailsCorrect() {
   document.getElementById('booking-details').style.display = 'none';
   document.getElementById('confirmation-buttons').style.display = 'none';
   
-  // Construct URL with query parameters for prefill
-  const surveyUrl = new URL('https://api.leadconnectorhq.com/widget/survey/hguGjV9kDYPzFtYLdtUI');
-  surveyUrl.searchParams.append('contact.last_name', currentLastName);
-  surveyUrl.searchParams.append('contact.booking_number', currentBookingNum);
+  // Build iframe URL with query parameters for prefill
+  const surveyUrl = `https://api.leadconnectorhq.com/widget/survey/hguGjV9kDYPzFtYLdtUI?booking_number=${encodeURIComponent(currentBookingNum)}&last_name=${encodeURIComponent(currentLastName)}`;
   
-  // Load iframe with URL query parameters
+  // Load iframe
   const iframe = document.createElement('iframe');
-  iframe.src = surveyUrl.toString();
+  iframe.src = surveyUrl;
   iframe.style.border = 'none';
   iframe.style.width = '100%';
   iframe.style.height = '600px';
@@ -165,7 +164,7 @@ function handleDetailsCorrect() {
   document.getElementById('survey-iframe').appendChild(iframe);
   document.getElementById('survey-iframe').style.display = 'block';
   
-  // Load LeadConnector script
+  // Load LeadConnector script only once
   if (!document.querySelector('script[src="https://link.msgsndr.com/js/form_embed.js"]')) {
     const script = document.createElement('script');
     script.src = 'https://link.msgsndr.com/js/form_embed.js';
@@ -184,6 +183,7 @@ function resetForm() {
   currentLastName = '';
 }
 </script> 
+
 <style> 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap'); 
 </style>
