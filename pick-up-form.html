@@ -159,6 +159,7 @@ document.getElementById('verify-btn').onclick = async function(e) {
           html += `<div><strong>Vehicle Fleet Number:</strong> ${data.vehicleFleetNumber}</div>`;
         }
         html += `<div><strong>Vehicle Registration Number:</strong> N/A</div></div></div><div style="border-bottom:1px solid #ddd;margin:20px 0;"></div>`;
+
       }
 
       html += `</div>`;
@@ -215,12 +216,30 @@ function handleDetailsCorrect() {
   document.getElementById('booking-details').style.display = 'none';
   document.getElementById('confirmation-buttons').style.display = 'none';
 
-  // Load the new iframe and script
-  document.getElementById('survey-iframe').innerHTML = `
-    <iframe src="https://api.leadconnectorhq.com/widget/survey/HRnCawqi4cNodd48rYv0" style="border:none;width:100%;" scrolling="no" id="HRnCawqi4cNodd48rYv0" title="survey"></iframe>
-    <script src="https://link.msgsndr.com/js/form_embed.js"></script>
-  `;
+  // Build iframe URL with query parameters for prefill
+  const surveyUrl = `https://api.leadconnectorhq.com/widget/survey/HRnCawqi4cNodd48rYv0?booking_number=${encodeURIComponent(currentBookingNum)}&last_name=${encodeURIComponent(currentLastName)}`;
+
+  // Load iframe
+  const iframe = document.createElement('iframe');
+  iframe.src = surveyUrl;
+  iframe.style.border = 'none';
+  iframe.style.width = '100%';
+  iframe.style.height = '600px';
+  iframe.style.display = 'block';
+  iframe.scrolling = 'no';
+  iframe.id = 'HRnCawqi4cNodd48rYv0';
+  iframe.title = 'survey';
+
+  document.getElementById('survey-iframe').innerHTML = '';
+  document.getElementById('survey-iframe').appendChild(iframe);
   document.getElementById('survey-iframe').style.display = 'block';
+
+  // Load LeadConnector script only once
+  if (!document.querySelector('script[src="https://link.msgsndr.com/js/form_embed.js"]')) {
+    const script = document.createElement('script');
+    script.src = 'https://link.msgsndr.com/js/form_embed.js';
+    document.head.appendChild(script);
+  }
 }
 
 function resetForm() {
