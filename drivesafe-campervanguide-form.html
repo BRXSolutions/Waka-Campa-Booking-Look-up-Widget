@@ -48,7 +48,7 @@ document.getElementById('verify-btn').onclick = async function(e) {
   document.getElementById('loading').style.display = 'block';
 
   try {
-    const response = await fetch('https://services.leadconnectorhq.com/hooks/va82O7V3l50t4My9T2zQ/webhook-trigger/b42e19c8-95a2-4865-9576-8208afec1985/sync', {
+    const response = await fetch('https://services.leadconnectorhq.com/hooks/va82O7V3l50t4My9T2zQ/sync', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({bookingNum: currentBookingNum, lastName: currentLastName})
