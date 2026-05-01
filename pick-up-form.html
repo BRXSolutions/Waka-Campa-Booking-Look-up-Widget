@@ -2,20 +2,23 @@
   <div style="text-align:center;margin-bottom:30px;">
     <h2 style="margin:0 0 10px 0;font-size:18px;"><strong>Pick-up Form</strong></h2>
     <div style="border-bottom:1px solid #ddd;margin:20px 0;"></div>
+        <img src="https://storage.googleapis.com/msgsndr/va82O7V3l50t4My9T2zQ/media/5a14548a-e6a8-4544-a2d6-41d740bb697f.jpg" alt="Payment options" style="width:118px;height:118px;display:inline-block;">
   </div>
 
-  <div id="form-section">
+ <div id="form-section">
     <div style="margin-bottom:20px;">
       <label style="display:block;margin-bottom:5px;font-weight:bold;color:#000;text-align:center;">Please enter reservation details</label>
       <label style="display:block;margin-bottom:5px;color:#000;">Booking Number</label>
-      <input id="booking-input" type="text" placeholder="e.g. 4020" style="width:100%;padding:12px;border:2px solid #bdbdbd;background:#e0e0e0;color:#000;border-radius:8px;font-size:16px;font-family:'DM Sans',Arial,sans-serif;">
+      <input id="booking-input" type="text" placeholder="e.g. 1234" style="width:100%;padding:12px;border:2px solid #bdbdbd;background:#e0e0e0;color:#000;border-radius:8px;font-size:16px;">
     </div>
+
     <div style="margin-bottom:25px;">
       <label style="display:block;margin-bottom:5px;color:#000;">Last Name</label>
-      <input id="lastname-input" type="text" placeholder="e.g. Lucero" style="width:100%;padding:12px;border:2px solid #bdbdbd;background:#e0e0e0;color:#000;border-radius:8px;font-size:16px;font-family:'DM Sans',Arial,sans-serif;">
+      <input id="lastname-input" type="text" placeholder="e.g. Smith" style="width:100%;padding:12px;border:2px solid #bdbdbd;background:#e0e0e0;color:#000;border-radius:8px;font-size:16px;">
     </div>
-    <button id="verify-btn" type="button" style="width:100%;padding:15px;background:radial-gradient( circle 300px at 50% 70%, #444, #000 );color:#fff;border:2px solid #fff;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;font-family:'DM Sans',Arial,sans-serif;">
-      Submit
+   
+    <button id="verify-btn" type="button" style="width:100%;padding:15px;background:radial-gradient(circle 300px at 50% 70%, #444, #000);color:#fff;border:2px solid #fff;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;">
+      Continue
     </button>
   </div>
 
@@ -92,14 +95,14 @@ document.getElementById('verify-btn').onclick = async function(e) {
           <div style="margin-bottom:20px;">
             <h4 style="margin:0 0 10px 0;font-size:18px;color:#000;text-align:left"><strong><u>Booking Details</u></strong></h4>
             <div style="display:grid;grid-template-columns:1fr;gap:8px;font-size:16px;text-align:left;">
-              <div><strong>Pickup Date:</strong> ${data.pickupDate || 'N/A'}</div>
-              <div><strong>Pickup Time:</strong> ${data.pickupTime || 'N/A'}</div>
-              <div><strong>Pickup Location:</strong> ${data.pickupLocation || 'N/A'}</div>
-              <div><strong>Dropoff Date:</strong> ${data.dropoffDate || 'N/A'}</div>
-              <div><strong>Dropoff Time:</strong> ${data.dropoffTime || 'N/A'}</div>
-              <div><strong>Dropoff Location:</strong> ${data.dropoffLocation || 'N/A'}</div>
-              <div><strong>Total Cost:</strong> ${data.totalCost || 'N/A'}</div>
-              <div><strong>Balance Due:</strong> ${data.totalBalanceDue || 'N/A'}</div>
+              <div><strong>Pickup Date:</strong> ${formatDate(data.pickupDate)}</div>
+               <div><strong>Pickup Time:</strong> ${data.pickupTime || 'N/A'}</div>
+               <div><strong>Pickup Location:</strong> ${data.pickupLocation || 'N/A'}</div>
+               <div><strong>Dropoff Date:</strong> ${formatDate(data.dropoffDate)}</div>
+               <div><strong>Dropoff Time:</strong> ${data.dropoffTime || 'N/A'}</div>
+               <div><strong>Dropoff Location:</strong> ${data.dropoffLocation || 'N/A'}</div>
+               <div><strong>Total Cost:</strong> NZD ${formatCurrency(data.totalCost)}</div>
+               <div><strong>Balance Due:</strong> NZD ${formatCurrency(data.totalBalanceDue)}</div>
             </div>
           </div>
           <div style="border-bottom:1px solid #ddd;margin:20px 0;"></div>
@@ -172,12 +175,12 @@ document.getElementById('verify-btn').onclick = async function(e) {
           <button id="details-correct" 
             style="flex:1; max-width:200px; padding:12px; text-align:center; background:radial-gradient(circle 80px at 50% 70%, #22c55e, #16a34a); color:#fff; border:2px solid #fff; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; font-family:'DM Sans',Arial,sans-serif;"
             onclick="handleDetailsCorrect()">
-            ✓ Details are correct - Proceed to form
+            ✓ Details are correct
           </button>
           <button id="details-incorrect" 
             style="flex:1; max-width:200px; padding:12px; text-align:center; background:radial-gradient(circle 80px at 50% 70%, #ef4444, #dc2626); color:#fff; border:2px solid #fff; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; font-family:'DM Sans',Arial,sans-serif;"
             onclick="window.location.href='mailto:support@wakacampa.com?subject=Booking%20Verification%20Issue%20-%20${currentBookingNum}&body=Hi%20Support,%0A%0AI%20have%20a%20problem%20with%20booking%20#${currentBookingNum}.%0AThe%20details%20shown%20are%20incorrect.%0A%0APlease%20help.%0A%0AThanks!';">
-            ✗ Details are incorrect - Contact Support
+            ✗ Details are incorrect
           </button>
         </div>
       `;
@@ -256,6 +259,26 @@ function resetForm() {
   currentLastName = '';
   currentEmail = '';
 }
+function formatDate(dateStr) {
+  if (!dateStr || dateStr === 'N/A') return 'N/A';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return 'N/A';
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return `${months[date.getMonth()]}, ${date.getDate()}, ${date.getFullYear()}`;
+}
+
+// Format currency as "NZD $X,XXX.XX"
+function formatCurrency(amount) {
+  if (!amount || amount === 'N/A') return 'N/A';
+  const num = parseFloat(amount);
+  if (isNaN(num)) return 'N/A';
+  return new Intl.NumberFormat('en-NZ', { 
+    style: 'currency', 
+    currency: 'NZD',
+    minimumFractionDigits: 2 
+  }).format(num);
+}
+  
 </script>
 
 <style>
