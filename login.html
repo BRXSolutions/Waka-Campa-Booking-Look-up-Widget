@@ -54,7 +54,7 @@ document.getElementById('login-btn').onclick = async function(e) {
     if (result.success && result.agentName) {
       localStorage.setItem('agentName', result.agentName);
       localStorage.setItem('isLoggedIn', 'true');
-      window.location.href = 'https://waka-campa.github.io/Waka-Campa-Booking.html';
+      window.location.href = 'https://waka-campa.github.io/Waka-Campa-Booking/home-page.html';
     } else {
       showLoginError(result.message || 'Invalid username or password');
     }
