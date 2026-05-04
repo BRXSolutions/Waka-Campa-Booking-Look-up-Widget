@@ -1,3 +1,137 @@
+<head><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0"></head>
+
+<div style="max-width:1200px;margin:0 auto;padding:30px;background:#fff;color:#000;font-family:'DM Sans',Arial,sans-serif;border-radius:16px;">
+
+  <!-- HEADER -->
+  <div style="text-align:center;margin-bottom:10px;padding-bottom:5px;">
+    <img src="https://storage.googleapis.com/msgsndr/va82O7V3l50t4My9T2zQ/media/5a14548a-e6a8-4544-a2d6-41d740bb697f.jpg"
+         alt="Waka Campa Logo"
+         style="float:left;margin-right:15px;max-height:60px;">
+    <h1 style="margin:0 0 10px 0;font-size:28px;"><strong>Waka Campa Support Portal</strong></h1>
+  </div>
+  <div style="text-align:right;margin-bottom:10px;border-bottom:2px solid #e0e0e0;padding-bottom:10px;"> 
+    <div id="agent-welcome" style="font-size:18px;text-align:right;color:#444;"></div> 
+    <button id="logout-btn" style="margin-top:15px;padding:10px 25px;background:radial-gradient(circle 80px at 50% 70%, #444, #000);color:#fff;border:2px solid #fff;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;font-family:'DM Sans',Arial,sans-serif;">Logout</button>
+  </div>
+</div>
+  <div style="font-family:'DM Sans',Arial,sans-serif;display:grid;grid-template-columns:minmax(200px,1fr) 7fr;gap:30px;height:calc(100vh - 200px);overflow:hidden;padding-left:20px;padding-right:15px">
+
+    <!-- LEFT MENU -->
+    <div style="min-width:200px;">
+      <h3 style="margin:0 0 20px 0;font-size:16px;text-align:center;">Quick Actions</h3>
+      <div style="display:grid;gap:15px;">
+
+        <a href="#home" onclick="showSection('home')" style="display:block;padding:14px;background:#f8f9fa;border:2px solid #e0e0e0;border-radius:12px;text-decoration:none;color:#000;font-size:16px;font-weight:500;text-align:left;">
+          🏠 Home
+        </a>
+
+        <a href="#booking" onclick="showSection('booking')" style="display:block;padding:14px;background:#f8f9fa;border:2px solid #e0e0e0;border-radius:12px;text-decoration:none;color:#000;font-size:16px;font-weight:500;text-align:left;">
+          🔍 Booking Lookup
+        </a>
+
+        <a href="#support" onclick="showSection('support')" style="display:block;padding:14px;background:#f8f9fa;border:2px solid #e0e0e0;border-radius:12px;text-decoration:none;color:#000;font-size:16px;font-weight:500;text-align:left;">
+          📋 Support Tickets
+        </a>
+
+      </div>
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div style="font-family:'DM Sans',Arial,sans-serif;overflow-y:auto;height:calc(100vh - 200px);padding-right:10px;">
+
+      <!-- HOME -->
+<div id="home-section" style="display:block;">
+  <!-- Hero Message -->
+  <div style="text-align:center;padding:30px;background:#f8f9fa;border-radius:16px;border:2px dashed #e0e0e0;margin-bottom:30px;">
+    <div style="font-size:24px;margin-bottom:15px;">🎉 Wakacampa Support Portal v.1 is now live!!</div>
+    <p style="color:#666;font-size:16px;margin:0;">Please feel free to send your suggestions to brix@wakacampa.com</p>
+  </div>
+
+  <!-- KNOWLEDGE BASE SECTION -->
+  <div style="max-width:100%;margin:0 auto;">
+    <h3 style="text-align:left;margin-left:10px;margin-bottom:20px;font-size:16px;">Knowledge Base</h3>
+    <div style="display:grid;gap:15px;">
+      
+      <!-- Dropdown 1 -->
+      <select style="width:100%;padding:15px;background:#fff;border:2px solid #e0e0e0;border-radius:12px;font-size:14px;cursor:pointer;" onchange="if(this.value) window.open(this.value, '_blank');">
+        <option value="">Revamp Booking Pipeline System</option>
+        <option value="https://www.loom.com/share/68406409800f407a8a6b0ca966789a8c">Part 1 Walkthrough Video - Waka Campa Booking Pipeline</option>
+         <option value="https://www.loom.com/share/c2b22ae0a83b44c982f38b01a4b33425">Part 2 Walkthrough Video - Waka Campa Booking Pipeline</option>
+         <option value="https://www.loom.com/share/c46723a20c084b2dad1a702896de85cc">Part 3 Walkthrough Video - Waka Campa Booking Pipeline</option>
+         <option value="https://www.loom.com/share/f204261313f6445483eb736786d49378">Part 4 Walkthrough Video - Waka Campa Booking Pipeline</option>
+         <option value="https://www.loom.com/share/cc3de78ab05d454ca0cd4e7337976de6">Part 5 Walkthrough Video - Waka Campa Booking Pipeline</option>
+         <option value="https://www.loom.com/share/fb33e76c06b34533a5515abf9d9f0639">Part 6 Walkthrough Video - Waka Campa Booking Pipeline</option>
+         <option value="https://www.loom.com/share/050836c4083449fe9bda7fb585fbd4cd">Part 7 Walkthrough Video - Waka Campa Booking Pipeline</option>
+      </select>
+
+      <!-- Dropdown 2 -->
+      <select style="width:100%;padding:15px;background:#fff;border:2px solid #e0e0e0;border-radius:12px;font-size:14px;cursor:pointer;" onchange="if(this.value) window.open(this.value, '_blank');">
+        <option value="">Technical Guides</option>
+        <option value="https://example.com/api-docs">API Integration Docs</option>
+        <option value="https://example.com/automation-guide">Automation Workflow Guide</option>
+      </select>
+
+      <!-- Dropdown 3 -->
+      <select style="width:100%;padding:15px;background:#fff;border:2px solid #e0e0e0;border-radius:12px;font-size:14px;cursor:pointer;" onchange="if(this.value) window.open(this.value, '_blank');">
+        <option value="">Communication Scripts</option>
+        <option value="https://example.com/email-templates">Email Templates</option>
+        <option value="https://example.com/chat-scripts">Chat Agent Scripts</option>
+      </select>
+
+    </div>
+  </div>
+</div>
+
+      <!-- BOOKING LOOKUP -->
+      <div id="booking-section" style="display:none;">
+
+        <div style="max-width:700px;margin:0 auto;padding:30px;background:#fff;color:#000;border-radius:16px;">
+
+          <div style="text-align:center;margin-bottom:30px;">
+            <h2 style="margin:0 0 10px 0;font-size:24px;"><strong>Waka Campa Support Lookup</strong></h2>
+            <p style="margin:0;font-size:16px;">Enter booking details to view opportunity information</p>
+          </div>
+
+          <div id="form-section-support">
+            <div style="margin-bottom:20px;">
+              <label style="display:block;margin-bottom:5px;font-weight:bold;">Booking Number</label>
+              <input id="booking-input-support" type="text" placeholder="e.g. 4020" style="width:100%;padding:12px;border:2px solid #bdbdbd;background:#e0e0e0;border-radius:8px;font-size:16px;">
+            </div>
+
+            <div style="margin-bottom:25px;">
+              <label style="display:block;margin-bottom:5px;font-weight:bold;">Last Name</label>
+              <input id="lastname-input-support" type="text" placeholder="e.g. Lucero" style="width:100%;padding:12px;border:2px solid #bdbdbd;background:#e0e0e0;border-radius:8px;font-size:16px;">
+            </div>
+
+            <button id="verify-btn-support" type="button" style="width:100%;padding:15px;background:radial-gradient(circle 300px at 50% 70%, #444, #000);color:#fff;border:2px solid #fff;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;">
+              Verify Booking
+            </button>
+          </div>
+
+          <div id="loading-support" style="display:none;padding:20px;text-align:center;">🔍 Searching Reservation....</div>
+          <div id="booking-details-support" style="display:none;"></div>
+          <div id="error-support" style="display:none;color:#ef4444;text-align:center;padding:20px;"></div>
+
+        </div>
+
+      </div>
+
+      <!-- SUPPORT -->
+      <div id="support-section" style="display:none;">
+        <h3 style="text-align:center;margin:0 0 20px 0;font-size:22px;">Support Tickets</h3>
+
+        <div style="text-align:center;padding:30px;background:#f8f9fa;border-radius:16px;border:2px dashed #e0e0e0;">
+          <div style="font-size:24px;margin-bottom:15px;">📋 Coming soon...</div>
+          <p style="color:#666;font-size:16px;margin:0;">Support ticket management will be here.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
 /* GLOBAL VARIABLES */
 const basePath = '/Waka-Campa-Booking';
