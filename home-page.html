@@ -1,3 +1,7 @@
+<head><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0"></head>
+
 <div style="max-width:1200px;margin:0 auto;padding:30px;background:#fff;color:#000;font-family:'DM Sans',Arial,sans-serif;border-radius:16px;">
 
   <!-- HEADER -->
@@ -344,4 +348,58 @@ document.getElementById('logout-btn').onclick = function () {
   localStorage.clear();
   window.location.href = `${basePath}/login.html`;
 }
+  <script>
+/* CACHE BUSTING */
+(function() {
+  const cacheBust = 'v=' + Date.now();
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(registration => registration.unregister());
+    });
+  }
+})();
+
+/* SESSION MANAGEMENT - 1 HOUR TIMEOUT */
+let sessionTimeout;
+function startSessionTimer() {
+  if (sessionTimeout) clearTimeout(sessionTimeout);
+  sessionTimeout = setTimeout(() => {
+    alert('Session expired after 1 hour of inactivity. Please log in again.');
+    logoutUser();
+  }, 3600000); // 1 hour
+}
+
+function resetSessionTimer() {
+  startSessionTimer();
+}
+
+function logoutUser() {
+  sessionStorage.clear();
+  localStorage.clear();
+  window.location.href = '/Waka-Campa-Booking/login.html';
+}
+
+/* PAGE LOAD */
+window.addEventListener('load', function() {
+  const agentName = localStorage.getItem('agentName');
+  const welcomeEl = document.getElementById('agent-welcome');
+  if (welcomeEl) {
+    welcomeEl.innerHTML = agentName ? `Hi, <strong>${agentName}</strong>` : 'Hi, Agent';
+  }
+  startSessionTimer(); // Start session timer
+});
+
+/* RESET TIMER ON ACTIVITY */
+['click', 'keydown', 'mousemove', 'scroll'].forEach(event => {
+  document.addEventListener(event, resetSessionTimer, true);
+});
+
+function showSection(section) {
+  document.getElementById('home-section').style.display = 'none';
+  document.getElementById('booking-section').style.display = 'none';
+  document.getElementById('support-section').style.display = 'none';
+  document.getElementById(section + '-section').style.display = 'block';
+  resetSessionTimer(); // Reset timer when switching sections
+}
+</script>
 </script>
