@@ -348,9 +348,8 @@ document.getElementById('logout-btn').onclick = function () {
   localStorage.clear();
   window.location.href = `${basePath}/login.html`;
 }
-  <script>
 /* CACHE BUSTING */
-(function() {
+function() {
   const cacheBust = 'v=' + Date.now();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(registrations => {
@@ -401,6 +400,4 @@ function showSection(section) {
   document.getElementById(section + '-section').style.display = 'block';
   resetSessionTimer(); // Reset timer when switching sections
 }
-</script>
-</script>
 </script>
