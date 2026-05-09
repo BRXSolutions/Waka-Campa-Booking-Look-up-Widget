@@ -6,7 +6,7 @@
     <img src="https://storage.googleapis.com/msgsndr/va82O7V3l50t4My9T2zQ/media/5a14548a-e6a8-4544-a2d6-41d740bb697f.jpg" alt="Payment options" style="width:118px;height:118px;display:inline-block;">
   </div>
 
-   <div id="form-section">
+  <div id="form-section">
     <div style="margin-bottom:20px;">
       <label style="display:block;margin-bottom:5px;font-weight:bold;color:#000;text-align:center;">Please enter reservation details</label>
       <label style="display:block;margin-bottom:5px;color:#000;">Booking Number</label>
@@ -61,15 +61,19 @@ document.getElementById('verify-btn').onclick = async function(e) {
 
     let result;
     if (response.status === 204) {
+      // No content returned: treat as booking not found
       result = { success: false, message: 'Booking not found' };
     } else {
-      result = await response.json();
+      const json = await response.json();
+      // n8n returns an array of items; use the first element if it's an array
+      result = Array.isArray(json) ? json[0] : json;
     }
 
-    if (result.success && result.data) {
+    if (result && result.success && result.data) {
       const data = result.data;
       currentEmail = data.hirerEmail || data.email || '';
 
+      // Validate required booking fields
       if (!data.bookingNum || !data.lastName || data.bookingNum.trim() === "" || data.lastName.trim() === "") {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('error').style.display = 'block';
@@ -114,7 +118,7 @@ document.getElementById('verify-btn').onclick = async function(e) {
               <div><strong>Hirer Full Name:</strong> ${data.hirerFullName || 'N/A'}</div>
               <div><strong>Email:</strong> ${data.hirerEmail || data.email || 'N/A'}</div>
               <div><strong>Phone:</strong> ${data.hirerPhone || 'N/A'}</div>
-            `;
+      `;
 
       if (data.additionalPhone) {
         html += `<div><strong>Additional Phone:</strong> ${data.additionalPhone}</div>`;
@@ -191,7 +195,7 @@ document.getElementById('verify-btn').onclick = async function(e) {
       document.getElementById('error').style.display = 'block';
       document.getElementById('error').innerHTML = `
         <div style="font-size:18px;">
-          ❌ ${result.message || 'Booking not found'}
+          ❌ ${result && result.message ? result.message : 'Booking not found'}
           <br><small>Contact <a href="mailto:support@wakacampa.com" style="color:#0000FF;text-decoration:underline;">support@wakacampa.com</a> if you think this is correct</small>
         </div>
         <button onclick="resetForm()" style="margin-top:15px;padding:10px 20px;background:radial-gradient( circle 80px at 50% 70%, #444, #000 );color:#fff;border:2px solid #fff;border-radius:6px;font-family:'DM Sans',Arial,sans-serif;">
@@ -220,11 +224,9 @@ function handleDetailsCorrect() {
   document.getElementById('booking-details').style.display = 'none';
   document.getElementById('confirmation-buttons').style.display = 'none';
 
-  // Build iframe URL with prefilled fields and cache-buster
   const cacheBuster = Date.now();
   const surveyUrl = `https://api.leadconnectorhq.com/widget/survey/hguGjV9kDYPzFtYLdtUI?booking_number=${encodeURIComponent(currentBookingNum)}&email=${encodeURIComponent(currentEmail)}&last_name=${encodeURIComponent(currentLastName)}&t=${cacheBuster}`;
 
-  // Load iframe
   const iframe = document.createElement('iframe');
   iframe.src = surveyUrl;
   iframe.style.border = 'none';
@@ -239,14 +241,12 @@ function handleDetailsCorrect() {
   document.getElementById('survey-iframe').appendChild(iframe);
   document.getElementById('survey-iframe').style.display = 'block';
 
-  // Load LeadConnector script with cache-buster only once
   if (!document.querySelector('script[src*="form_embed.js"]')) {
     const script = document.createElement('script');
     script.src = `https://link.msgsndr.com/js/form_embed.js?t=${cacheBuster}`;
     document.head.appendChild(script);
   }
 }
-
 
 function resetForm() {
   document.getElementById('form-section').style.display = 'block';
@@ -260,7 +260,8 @@ function resetForm() {
   currentLastName = '';
   currentEmail = '';
 }
-   function formatDate(dateStr) {
+
+function formatDate(dateStr) {
   if (!dateStr || dateStr === 'N/A') return 'N/A';
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return 'N/A';
@@ -268,7 +269,6 @@ function resetForm() {
   return `${months[date.getMonth()]}, ${date.getDate()}, ${date.getFullYear()}`;
 }
 
-// Format currency as "NZD $X,XXX.XX"
 function formatCurrency(amount) {
   if (!amount || amount === 'N/A') return 'N/A';
   const num = parseFloat(amount);
