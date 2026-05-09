@@ -323,7 +323,7 @@ function submitReceipt() {
   formData.append("opportunityId", currentOpportunityId);
 
   // Post directly to the ActivePieces webhook
-  fetch('https://cloud.activepieces.com/api/v1/webhooks/vA2xymON3CLP2ybS3C6Vz', {
+  fetch('https://n8n.wakacampa.com/webhook/e4ffaa0c-c076-4d23-8b69-9ac0f8d6a6bb', {
     method: "POST",
     body: formData // Do not set Content-Type header; browser sets it with boundary
   })
