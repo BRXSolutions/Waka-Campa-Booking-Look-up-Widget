@@ -118,13 +118,14 @@ document.getElementById('verify-btn').onclick = async function(e){
     });
 
     let result;
-    if(response.status===204){
-      result={success:false,message:'Booking not found'};
-    }else{
-      result=await response.json();
+    if (response.status === 204) {
+      result = { success: false, message: 'Booking not found' };
+    } else {
+      const json = await response.json();
+      result = Array.isArray(json) ? json[0] : json;
     }
 
-    if(result.success && result.data){
+    if (result && result.success && result.data) {
 
       const data=result.data;
       currentEmail = data.hirerEmail || data.email || '';
