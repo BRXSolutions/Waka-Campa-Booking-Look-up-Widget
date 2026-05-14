@@ -134,6 +134,30 @@ document.getElementById('verify-btn').onclick = async function(e){
       document.getElementById('loading').style.display='none';
       document.getElementById('booking-details').style.display='block';
 
+      /* --- EXTRACT RATES/EXTRA FEE FIELDS (all top‑level) --- */
+      const numberOfDays = data.numberOfDays || null;
+      const seasonsDailyRate = data.seasonsDailyRate;
+      const insuranceName = data.insuranceName || null;
+      const insuranceAmount = data.insuranceAmount;
+      const boosterQty = data.boosterQty;
+      const boosterTotal = data.boosterTotal;
+      const fwdSeatQty = data.fwdSeatQty;
+      const fwdSeatTotal = data.fwdSeatTotal;
+      const handlingQty = data.handlingQty;
+      const handlingTotal = data.handlingTotal;
+      const chainsQty = data.chainsQty;
+      const chainsTotal = data.chainsTotal;
+      const taxName = data.taxName || null;
+      const taxAmount = data.taxAmount;
+      const totalRatesAndFees = data.totalRatesAndFees;
+
+      // Helper: only return a row if value is present
+      function valIfPresent(label, value, formatter = null) {
+        if (value == null || value === '' || value === 'N/A') return '';
+        const formatted = formatter ? formatter(value) : String(value);
+        return `<div><strong>${label}:</strong> ${formatted}</div>`;
+      }
+
       /* KEEPING ALL DETAILS UNTOUCHED */
 let html = `
         <div style="background:#fff;color:#000;padding:30px;border-radius:20px;text-align:left;box-shadow:0 20px 40px rgba(0,0,0,0.2);font-family:'DM Sans',Arial,sans-serif;">
@@ -210,6 +234,35 @@ let html = `
           html += `<div><strong>Vehicle Fleet Number:</strong> ${data.vehicleFleetNumber}</div>`;
         }
         html += `<div><strong>Vehicle Registration Number:</strong> N/A</div></div></div><div style="border-bottom:1px solid #ddd;margin:20px 0;"></div>`;
+      }
+
+      /* NEW: RATES & EXTRA FEES SECTION (only show non‑empty fields) */
+      const RTF_ROWS = [];
+
+      RTF_ROWS.push(valIfPresent("Number of Days", numberOfDays));
+      RTF_ROWS.push(valIfPresent("Season Daily Rate", seasonsDailyRate, formatCurrency));
+      RTF_ROWS.push(valIfPresent("Insurance", `${insuranceName || 'N/A'} (${formatCurrency(insuranceAmount)})`));
+      RTF_ROWS.push(valIfPresent("Booster Child Seat Qty", boosterQty));
+      RTF_ROWS.push(valIfPresent("Booster Child Seat Total Fee", boosterTotal, formatCurrency));
+      RTF_ROWS.push(valIfPresent("Forward-facing Child Seat Qty", fwdSeatQty));
+      RTF_ROWS.push(valIfPresent("Forward-facing Child Seat Total Fee", fwdSeatTotal, formatCurrency));
+      RTF_ROWS.push(valIfPresent("Handling & Living Equipment Qty", handlingQty));
+      RTF_ROWS.push(valIfPresent("Handling & Living Equipment Total Fee", handlingTotal, formatCurrency));
+      RTF_ROWS.push(valIfPresent("Snow Chains Qty", chainsQty));
+      RTF_ROWS.push(valIfPresent("Snow Chains Total Fee", chainsTotal, formatCurrency));
+      RTF_ROWS.push(valIfPresent("Tax", `${taxName || 'N/A'} (${formatCurrency(taxAmount)})`));
+      RTF_ROWS.push(valIfPresent("Total Rates & Fees", totalRatesAndFees, formatCurrency));
+
+      if (RTF_ROWS.some(row => row.trim() !== '')) {
+        html += `
+          <div style="margin-bottom:20px;">
+            <h4 style="margin:0 0 10px 0;font-size:18px;color:#000;text-align:left"><strong><u>Rates & Extra Fees</u></strong></h4>
+            <div style="display:grid;grid-template-columns:1fr;gap:8px;font-size:16px;text-align:left;">
+              ${RTF_ROWS.filter(row => row.trim() !== '').join('')}
+            </div>
+          </div>
+          <div style="border-bottom:1px solid #ddd;margin:20px 0;"></div>
+        `;
       }
 
       html += `</div>`;
@@ -351,9 +404,9 @@ function submitReceipt() {
   
 function payCrypto(){
 alert(
-'Crypto payment coming soon.\\\\nBooking: ' +
+'Crypto payment coming soon.\\\\\\\\nBooking: ' +
 currentBookingNum +
-'\\\\nOpportunity ID: ' +
+'\\\\\\\\nOpportunity ID: ' +
 currentOpportunityId
 );
 }
