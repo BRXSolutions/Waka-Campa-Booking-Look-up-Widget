@@ -239,20 +239,19 @@ let html = `
       /* NEW: RATES & EXTRA FEES SECTION (only show non‑empty fields) */
       const RTF_ROWS = [];
 
-      RTF_ROWS.push(valIfPresent("Number of Days", numberOfDays));
-      RTF_ROWS.push(valIfPresent("Season Daily Rate", seasonsDailyRate, formatCurrency));
-      RTF_ROWS.push(valIfPresent("Insurance", `${insuranceName || 'N/A'} (${formatCurrency(insuranceAmount)})`));
-      RTF_ROWS.push(valIfPresent("Booster Child Seat Qty", boosterQty));
-      RTF_ROWS.push(valIfPresent("Booster Child Seat Total Fee", boosterTotal, formatCurrency));
-      RTF_ROWS.push(valIfPresent("Forward-facing Child Seat Qty", fwdSeatQty));
-      RTF_ROWS.push(valIfPresent("Forward-facing Child Seat Total Fee", fwdSeatTotal, formatCurrency));
-      RTF_ROWS.push(valIfPresent("Handling & Living Equipment Qty", handlingQty));
-      RTF_ROWS.push(valIfPresent("Handling & Living Equipment Total Fee", handlingTotal, formatCurrency));
-      RTF_ROWS.push(valIfPresent("Snow Chains Qty", chainsQty));
-      RTF_ROWS.push(valIfPresent("Snow Chains Total Fee", chainsTotal, formatCurrency));
-      RTF_ROWS.push(valIfPresent("Tax", `${taxName || 'N/A'} (${formatCurrency(taxAmount)})`));
-      RTF_ROWS.push(valIfPresent("Total Rates & Fees", totalRatesAndFees, formatCurrency));
-
+RTF_ROWS.push(valIfPresent("Number of Days", numberOfDays));
+RTF_ROWS.push(valIfPresent("Daily Rate", `${formatCurrency(seasonsDailyRate)} NZD`));
+RTF_ROWS.push(valIfPresent("Insurance", `${insuranceName || 'N/A'} (${formatCurrency(insuranceAmount)} NZD)`));
+RTF_ROWS.push(valIfPresent("Booster Child Seat Qty", boosterQty));
+RTF_ROWS.push(valIfPresent("Booster Child Seat Total Fee", `${formatCurrency(boosterTotal)} NZD`));
+RTF_ROWS.push(valIfPresent("Forward-facing Child Seat Qty", fwdSeatQty));
+RTF_ROWS.push(valIfPresent("Forward-facing Child Seat Total Fee", `${formatCurrency(fwdSeatTotal)} NZD`));
+RTF_ROWS.push(valIfPresent("Handling & Living Equipment Qty", handlingQty));
+RTF_ROWS.push(valIfPresent("Handling & Living Equipment Total Fee", `${formatCurrency(handlingTotal)} NZD`));
+RTF_ROWS.push(valIfPresent("Snow Chains Qty", chainsQty));
+RTF_ROWS.push(valIfPresent("Snow Chains Total Fee", `${formatCurrency(chainsTotal)} NZD`));
+RTF_ROWS.push(valIfPresent("Tax", `${taxName || 'N/A'} (${formatCurrency(taxAmount)} NZD)`));
+RTF_ROWS.push(valIfPresent("Total Rates & Fees", `${formatCurrency(totalRatesAndFees)} NZD`));
       if (RTF_ROWS.some(row => row.trim() !== '')) {
         html += `
           <div style="margin-bottom:20px;">
