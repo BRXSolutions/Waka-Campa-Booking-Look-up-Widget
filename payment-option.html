@@ -252,7 +252,6 @@ RTF_ROWS.push(valIfPresent("Snow Chains Qty", chainsQty));
 RTF_ROWS.push(valIfPresent("Snow Chains Total Fee", `${formatCurrency(chainsTotal)} NZD`));
 RTF_ROWS.push(valIfPresent("Tax", `${taxName || 'N/A'} (${formatCurrency(taxAmount)} NZD)`));
 RTF_ROWS.push(valIfPresent("Total Rates & Fees", `${formatCurrency(totalRatesAndFees)} NZD`));
-RTF_ROWS.push(valIfPresent("Note", "Currency is in New Zealand Dollar (NZD)"));
       
       if (RTF_ROWS.some(row => row.trim() !== '')) {
         html += `
